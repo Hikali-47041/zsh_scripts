@@ -73,9 +73,11 @@ else
     year_month_dir_array+=("$base_dir/${start_date%%-*}/${start_date%%-*}-"{${${start_date#*-}%%-*}..12})
     # between years
     for year in "${year_array[@]:1:${#year_array[@]}-2}"
+    do
         year_month_dir_array+=("$base_dir/$year/$year-"{01..12})
-        # end year
-        year_month_dir_array+=("$base_dir/${end_date%%-*}/${end_date%%-*}-"{01..${${end_date#*-}%%-*}})
+    done
+    # end year
+    year_month_dir_array+=("$base_dir/${end_date%%-*}/${end_date%%-*}-"{01..${${end_date#*-}%%-*}})
 fi
 
 # run mkdir

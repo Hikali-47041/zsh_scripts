@@ -7,8 +7,7 @@ base_dir="$PWD"
 start_date="$(date -I)"
 end_date="$start_date"
 dry_run_flag=false
-force_flag=false
-template_file="/tmp/template.md"
+template_file="/dev/null"
 template_text=""
 ext="md"
 
