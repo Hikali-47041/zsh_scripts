@@ -10,6 +10,7 @@ dry_run_flag=false
 template_file="/dev/null"
 template_text=""
 ext="md"
+touch_only_flag=false
 
 # show help message
 show_help() {
@@ -37,6 +38,7 @@ while [[ $# -gt 0 ]]; do
     case $1 in
         -b|--base-dir) [ -n "$2" ] && base_dir="$2" || {print -P "%F{009} [Error] Invalid args %f" >&2; show_help $0; exit 1}; shift 2;;
         -b=*|--base-dir=*) ARG="$1"; base_dir="${ARG#*=}"; unset ARG; shift;;
+        -c|−−create-file-only) touch_only_flag=true; shift;;
         --extention) [ -n "$2" ] && ext="$2" || {print -P "%F{009} [Error] Invalid args %f" >&2; show_help $0; exit 1}; shift 2;;
         --extention=*) ARG="$1"; ext="${ARG#*=}"; unset ARG; shift;;
         -d|--dry-run) dry_run_flag=true; shift;;
@@ -138,18 +140,21 @@ else
 fi
 
 # write file
-for file_path in $file_list
-do
-    # is file empty?
-    if [ ! -s "$file_path" ]
-    then
-        if "$dry_run_flag"
+if ! touch_only_flag
+then
+    for file_path in $file_list
+    do
+        # is file empty?
+        if [ ! -s "$file_path" ]
         then
-            print -P "%F{014}[dry_run] write # ${file_path:t:r} + $template_file content to $file_path%f" >&2
-        else
-            # add filename and template
-            # print -P "%F{014}[dry_run] write # ${file_path:t:r} + $template_file content to $file_path%f" >&2
-            print "# ${file_path:t:r}\n$template_text" > "$file_path"
+            if "$dry_run_flag"
+            then
+                print -P "%F{014}[dry_run] write # ${file_path:t:r} + $template_file content to $file_path%f" >&2
+            else
+                # add filename and template
+                # print -P "%F{014}[dry_run] write # ${file_path:t:r} + $template_file content to $file_path%f" >&2
+                print "# ${file_path:t:r}\n$template_text" > "$file_path"
+            fi
         fi
-    fi
-done
+    done
+fi
