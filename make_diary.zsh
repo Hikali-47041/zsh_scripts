@@ -38,7 +38,7 @@ while [[ $# -gt 0 ]]; do
     case $1 in
         -b|--base-dir) [ -n "$2" ] && base_dir="$2" || {print -P "%F{009} [Error] Invalid args %f" >&2; show_help $0; exit 1}; shift 2;;
         -b=*|--base-dir=*) ARG="$1"; base_dir="${ARG#*=}"; unset ARG; shift;;
-        -c|−−create-file-only) touch_only_flag=true; shift;;
+        -c|--create-file-only) touch_only_flag=true; shift;;
         --extention) [ -n "$2" ] && ext="$2" || {print -P "%F{009} [Error] Invalid args %f" >&2; show_help $0; exit 1}; shift 2;;
         --extention=*) ARG="$1"; ext="${ARG#*=}"; unset ARG; shift;;
         -d|--dry-run) dry_run_flag=true; shift;;
@@ -140,7 +140,7 @@ else
 fi
 
 # write file
-if ! touch_only_flag
+if ! "$touch_only_flag"
 then
     for file_path in $file_list
     do
